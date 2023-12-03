@@ -1,4 +1,0 @@
-#Sun Dec 03 12:43:37 EST 2023
-base.0=/home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
