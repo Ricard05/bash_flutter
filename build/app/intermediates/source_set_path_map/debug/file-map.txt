@@ -1,0 +1,12 @@
+com.example.flutter_bash.app-core-1.6.0-0 /home/ricardo/.gradle/caches/transforms-3/3fdca236016d2d83b9bdc38945bf1b2f/transformed/core-1.6.0/res
+com.example.flutter_bash.app-jetified-window-1.0.0-beta04-1 /home/ricardo/.gradle/caches/transforms-3/6057dcbb0e8cd3ac87091d5cfe6e6fe9/transformed/jetified-window-1.0.0-beta04/res
+com.example.flutter_bash.app-jetified-annotation-experimental-1.1.0-2 /home/ricardo/.gradle/caches/transforms-3/702d92ac0b3e87dcc16abe67f049722b/transformed/jetified-annotation-experimental-1.1.0/res
+com.example.flutter_bash.app-jetified-window-java-1.0.0-beta04-3 /home/ricardo/.gradle/caches/transforms-3/df5ac6c5404978a0f41cb3995bb5bbdf/transformed/jetified-window-java-1.0.0-beta04/res
+com.example.flutter_bash.app-debug-4 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/android/app/src/debug/res
+com.example.flutter_bash.app-main-5 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/android/app/src/main/res
+com.example.flutter_bash.app-pngs-6 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/build/app/generated/res/pngs/debug
+com.example.flutter_bash.app-resValues-7 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/build/app/generated/res/resValues/debug
+com.example.flutter_bash.app-rs-8 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/build/app/generated/res/rs/debug
+com.example.flutter_bash.app-mergeDebugResources-9 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/build/app/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.example.flutter_bash.app-mergeDebugResources-10 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/build/app/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+com.example.flutter_bash.app-merged_res-11 /home/ricardo/Documents/DA/proyectos_flutter/parcial3/Reporte/flutter_bash/build/app/intermediates/merged_res/debug
