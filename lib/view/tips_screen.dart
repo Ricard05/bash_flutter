@@ -2,6 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bash/widgets/widgets.dart';
 
+final cardData = [
+   {
+      "title": 'Presupuesta Inteligentemente',
+      "description": 'Establece un presupuesto realista que te permita cubrir tus necesidades esenciales y ahorra para metas a largo plazo.',
+      "imagePath": 'assets/images/img1.jpg',
+    },
+
+    {
+      "title": "Ahorra Regularmente",
+      "description": "Crea el hábito de ahorrar una parte de tus ingresos regularmente. Automatiza tus ahorros si es posible.",
+      "imagePath": "assets/images/img2.jpg"
+    },
+    
+    {
+      "title": 'Elimina Deudas',
+      "description": 'Prioriza el pago de deudas de alto interés. Utiliza estrategias como el método de bola de nieve para pagar deudas más rápido.',
+      "imagePath": 'assets/images/img3.jpg',
+    },
+
+    {
+      "title": 'Invierte para el Futuro',
+      "description": 'Considera invertir parte de tus ahorros en opciones de inversión a largo plazo, como acciones o fondos indexados. La inversión puede ayudarte a hacer crecer tu patrimonio con el tiempo.',
+      "imagePath": 'assets/images/img4.png',
+    },
+];
+
 class TipsScreen extends StatelessWidget {
   const TipsScreen({super.key});
 
@@ -15,35 +41,22 @@ class TipsScreen extends StatelessWidget {
       drawer: Nav(),
       body: FadeInUp(
         duration: const Duration(seconds: 1),
-        child: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            _buildTipCard(
-              title: 'Presupuesta Inteligentemente',
-              description:
-                  'Establece un presupuesto realista que te permita cubrir tus necesidades esenciales y ahorra para metas a largo plazo.',
-              imagePath: 'assets/images/img1.jpg',
-            ),
-            _buildTipCard(
-              title: 'Ahorra Regularmente',
-              description:
-                  'Crea el hábito de ahorrar una parte de tus ingresos regularmente. Automatiza tus ahorros si es posible.',
-              imagePath: 'assets/images/img2.jpg',
-            ),
-            _buildTipCard(
-              title: 'Elimina Deudas',
-              description:
-                  'Prioriza el pago de deudas de alto interés. Utiliza estrategias como el método de bola de nieve para pagar deudas más rápido.',
-              imagePath: 'assets/images/img3.jpg',
-            ),
-            _buildTipCard(
-              title: 'Invierte para el Futuro',
-              description:
-                  'Considera invertir parte de tus ahorros en opciones de inversión a largo plazo, como acciones o fondos indexados. La inversión puede ayudarte a hacer crecer tu patrimonio con el tiempo.',
-              imagePath: 'assets/images/img4.png',
-            ),
-          ],
-        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: CustomList(
+            length: 4, 
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            itemBuilder: (context, index) {
+              return _buildTipCard(
+                title: cardData[index]['title'].toString(),
+                description: cardData[index]['description'].toString(),
+                imagePath: cardData[index]['imagePath'].toString(),
+              );
+            }, 
+            axis: Axis.vertical
+          ),
+        )
       ),
     );
   }

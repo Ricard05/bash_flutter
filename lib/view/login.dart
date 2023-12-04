@@ -16,7 +16,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView( // Envuelve el Scaffold con SingleChildScrollView
+      body: SingleChildScrollView(
+        // Envuelve el Scaffold con SingleChildScrollView
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -40,18 +41,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Login', style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(0.2, 0.2),
-                          blurRadius: 3.0,
-                          color: Colors.black
-                        )
-                      ]
-                    )
-                    ),
+                    Text('Login',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40,
+                            shadows: [
+                              Shadow(
+                                  offset: Offset(0.2, 0.2),
+                                  blurRadius: 3.0,
+                                  color: Colors.black)
+                            ])),
                     SizedBox(height: 5),
                   ],
                 ),
@@ -64,7 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: MediaQuery.of(context).size.height * 0.828,
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(60), topRight: Radius.circular(60)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(60),
+                      topRight: Radius.circular(60)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(30),
@@ -74,57 +75,71 @@ class _LoginScreenState extends State<LoginScreen> {
                       Form(
                         child: Column(
                           children: [
-                            Image.asset('assets/images/logo-bash.png', width: 200,),
+                            Image.asset(
+                              'assets/images/logo-bash.png',
+                              width: 200,
+                            ),
                             const SizedBox(height: 10),
                             TextFormField(
                               controller: _usuarioController,
                               decoration: const InputDecoration(
-                                labelText: 'Usuario',
-                                prefixIcon: Icon(Icons.account_circle)
-                              ),
+                                  labelText: 'Usuario',
+                                  prefixIcon: Icon(Icons.account_circle)),
                             ),
                             const SizedBox(height: 40),
                             TextFormField(
                               controller: _contrasenaController,
                               obscureText: true,
                               decoration: const InputDecoration(
-                                labelText: 'Contraseña',
-                                prefixIcon: Icon(Icons.lock),
-                                suffixIcon: Icon(Icons.visibility)
-                              ),
+                                  labelText: 'Contraseña',
+                                  prefixIcon: Icon(Icons.lock),
+                                  suffixIcon: Icon(Icons.visibility)),
                             ),
                             const SizedBox(height: 50),
                             ElevatedButton(
                               onPressed: () {
                                 final String usuario = _usuarioController.text;
-                                final String contrasena = _contrasenaController.text;
+                                final String contrasena =
+                                    _contrasenaController.text;
 
-                                if (usuario == 'homero' && contrasena == '1234') {
+                                if (usuario == 'homero' &&
+                                    contrasena == '1234') {
                                   Navigator.pushNamed(context, 'dashboard');
                                 } else {
                                   QuickAlert.show(
-                                    context: context,
-                                    type: QuickAlertType.error,
-                                    title: 'Verifica tus datos',
-                                    text: 'Contraseña y/o usuario incorrectos!',
-                                    confirmBtnColor: Colors.red
-                                  );
-                                } 
+                                      context: context,
+                                      type: QuickAlertType.error,
+                                      title: 'Verifica tus datos',
+                                      text:
+                                          'Contraseña y/o usuario incorrectos!',
+                                      confirmBtnColor: Colors.red);
+                                }
                               },
-                              child: const Text('Iniciar Sesión', style: TextStyle(fontSize: 20)),
+                              child: const Text('Iniciar Sesión',
+                                  style: TextStyle(fontSize: 20)),
                             ),
-
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SizedBox(height: 90,),
-                                Text('No tienes una cuenta?', style: TextStyle(fontSize: 16)),
-                                SizedBox(width: 5,),
+                                const SizedBox(
+                                  height: 90,
+                                ),
+                                const Text('No tienes una cuenta?',
+                                    style: TextStyle(fontSize: 16)),
+                                const SizedBox(
+                                  width: 5,
+                                ),
                                 TextButton(
-                                  onPressed: (){
-                                    Navigator.pushNamed(context, 'sigin');
-                                 },
-                                  child: Text('Registrate', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal, fontSize: 16),))
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, 'sigin');
+                                    },
+                                    child: const Text(
+                                      'Registrate',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal,
+                                          fontSize: 16),
+                                    ))
                               ],
                             )
                           ],

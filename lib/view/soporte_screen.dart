@@ -127,7 +127,7 @@ class _SoporteScreenState extends State<SoporteScreen> {
                                 maxLines: null,
                                 keyboardType: TextInputType.multiline,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.message),
+                                  prefixIcon: const Icon(Icons.message),
                                   border: InputBorder.none,
                                   hintText: "Mensaje",
                                   hintStyle:
@@ -149,10 +149,10 @@ class _SoporteScreenState extends State<SoporteScreen> {
                       onPressed: () {
                         QuickAlert.show(
                             context: context,
-                            type: QuickAlertType.error,
-                            title: 'Verifica tus datos',
-                            text: 'Contraseña y/o usuario incorrectos!',
-                            confirmBtnColor: Colors.red);
+                            type: QuickAlertType.success,
+                            title: 'Pregunta o solicitud enviada',
+                            text: 'Se envio correctamente la solicitud realizada.',
+                            confirmBtnColor: Colors.teal);
                       },
                       color: Colors.teal,
                       shape: RoundedRectangleBorder(
