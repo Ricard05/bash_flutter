@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class CustomList extends StatelessWidget {
    
-  final int length;
-  final double height;
+  final int? length;
+  final double? height;
   final double width;
   final Axis axis;
   final Widget Function(BuildContext, int) itemBuilder;
@@ -11,8 +11,8 @@ class CustomList extends StatelessWidget {
   const CustomList(
     {
       Key? key, 
-      required this.length,
-      required this.height,
+      this.length,
+      this.height,
       required this.width,
       required this.itemBuilder, 
       required this.axis,

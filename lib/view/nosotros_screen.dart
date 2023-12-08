@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bash/widgets/widgets.dart';
 
+final characteristicsData = [
+  {
+    "title": "Registro de gastos e ingresos",
+    "description": "'Mantén un registro detallado de tus transacciones.'",
+  },
+  {
+    "title": "Perfil de usuario",
+    "description":
+        "'Personaliza tu perfil y gestiona tu información personal.'",
+  },
+  {
+    "title": "Soporte técnico",
+    "description":
+        "'Solicita ayuda y soporte para resolver dudas o problemas.'",
+  },
+];
+
 class NosotrosScreen extends StatelessWidget {
   const NosotrosScreen({super.key});
 
@@ -39,36 +56,34 @@ class NosotrosScreen extends StatelessWidget {
                 height: 500,
                 child: ListView(
                   padding: const EdgeInsets.all(16.0),
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Bienvenido a Bash, tu aplicación todo en uno para gestionar gastos e ingresos. '
                       'Nuestra misión es proporcionarte una experiencia sencilla y efectiva para el control '
                       'de tus finanzas personales. Estamos comprometidos a ayudarte a alcanzar tus metas financieras.',
                       style: TextStyle(fontSize: 16.0),
                     ),
-                    SizedBox(height: 16.0),
-                    Text(
+                    const SizedBox(height: 16.0),
+                    const Text(
                       'Características Principales:',
                       style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.teal),
                     ),
-                    ListTile(
-                      title: Text('Registro de Gastos e Ingresos'),
-                      subtitle: Text(
-                          'Mantén un registro detallado de tus transacciones.'),
-                    ),
-                    ListTile(
-                      title: Text('Formulario de Quejas'),
-                      subtitle: Text(
-                          'Danos tu feedback para mejorar nuestra aplicación.'),
-                    ),
-                    ListTile(
-                      title: Text('Perfil de Usuario'),
-                      subtitle: Text(
-                          'Personaliza tu perfil y gestiona tu información personal.'),
-                    ),
+                    CustomList(
+                        length: 3,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title:
+                                Text('${characteristicsData[index]['title']}'),
+                            subtitle: Text(
+                                '${characteristicsData[index]['description']}'),
+                          );
+                        },
+                        axis: Axis.vertical),
                   ],
                 ),
               ),

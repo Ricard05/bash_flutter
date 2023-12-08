@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_bash/widgets/widgets.dart';
+import 'package:flutter_bash/providers/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:flutter_bash/services/firebase_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -10,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _contrasenaController = TextEditingController();
 
   @override
@@ -35,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
             children: <Widget>[
               const SizedBox(height: 40),
 
-              // Parte principal del dashboard
               const Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
@@ -79,39 +82,61 @@ class _LoginScreenState extends State<LoginScreen> {
                               'assets/images/logo-bash.png',
                               width: 200,
                             ),
-                            const SizedBox(height: 10),
-                            TextFormField(
-                              controller: _usuarioController,
-                              decoration: const InputDecoration(
-                                  labelText: 'Usuario',
-                                  prefixIcon: Icon(Icons.account_circle)),
-                            ),
                             const SizedBox(height: 40),
-                            TextFormField(
+
+                            //Input email
+                            CustomTextFormField(
+                              controller: _emailController,
+                              labelText: 'Correo',
+                              obscureText: false,
+                              preIcon: Icons.email,
+                            ),
+                            const SizedBox(height: 20),
+
+                            //Input password
+                            CustomTextFormField(
                               controller: _contrasenaController,
                               obscureText: true,
-                              decoration: const InputDecoration(
-                                  labelText: 'Contraseña',
-                                  prefixIcon: Icon(Icons.lock),
-                                  suffixIcon: Icon(Icons.visibility)),
+                              labelText: 'Contraseña',
+                              preIcon: Icons.lock,
+                              suffixIcon: Icons.visibility,
                             ),
                             const SizedBox(height: 50),
                             ElevatedButton(
-                              onPressed: () {
-                                final String usuario = _usuarioController.text;
+                              onPressed: () async {
+                                //Se obtienen los valores del nombre de usuario y la contraseña y se quitan los espacios la inicio y al final de la misma
+                                final String email =
+                                    _emailController.text.trim();
                                 final String contrasena =
-                                    _contrasenaController.text;
+                                    _contrasenaController.text.trim();
 
-                                if (usuario == 'homero' &&
-                                    contrasena == '1234') {
-                                  Navigator.pushNamed(context, 'dashboard');
-                                } else {
+                                try {
+                                  final usersAns =
+                                      await getUsers(email, contrasena);
+
+                                  if (usersAns == true) {
+                                    // ignore: use_build_context_synchronously
+                                    context.read<GmailProvider>().setGmail(value1: email);
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pushNamed(context, 'dashboard');
+                                  } else {
+                                    // ignore: use_build_context_synchronously
+                                    QuickAlert.show(
+                                        context: context,
+                                        type: QuickAlertType.error,
+                                        title: 'Verifica tus datos',
+                                        text:
+                                            'Contraseña y/o usuario incorrectos!',
+                                        confirmBtnColor: Colors.red);
+                                  }
+                                } catch (e) {
+                                  // ignore: use_build_context_synchronously
                                   QuickAlert.show(
                                       context: context,
                                       type: QuickAlertType.error,
-                                      title: 'Verifica tus datos',
+                                      title: 'Error',
                                       text:
-                                          'Contraseña y/o usuario incorrectos!',
+                                          'Hubo un problema, intentelo mas tarde',
                                       confirmBtnColor: Colors.red);
                                 }
                               },
@@ -158,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _usuarioController.dispose();
+    _emailController.dispose();
     _contrasenaController.dispose();
     super.dispose();
   }

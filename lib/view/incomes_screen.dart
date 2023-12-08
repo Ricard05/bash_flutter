@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bash/widgets/widgets.dart';
 import 'package:draggable_home/draggable_home.dart';
-import 'package:flutter_bash/models/indexed_item.dart';
-import 'package:flutter_bash/widgets/pie_chart_widget.dart';
+import 'package:flutter_bash/providers/provider.dart';
+import 'package:flutter_bash/services/firebase_service.dart';
 
- List<List<IndexedItem>> IndexedContainerIncome = [
-  //Primer registro
-      [
-        //Campos de cada registro
-          IndexedItem(title: 'Hamburguesa', subtitle: 'Descripcion', icon: Icons.description),
-          IndexedItem(title: '123.00', subtitle: 'Cantidad', icon: Icons.monetization_on_rounded),
-          IndexedItem(title: '2023-11-08', subtitle: 'Fecha', icon: Icons.date_range),
-          IndexedItem(title: 'Comida', subtitle: 'Categoria', icon: Icons.fastfood),
-      ],
+List indexedIncomesContainer = [
+  {
+    "title": "description",
+    "icon": Icons.description,
+  },
+  {
+    "title": "amount",
+    "icon": Icons.monetization_on,
+  },
+  {
+    "title": "category",
+    "icon": Icons.book,
+  },
+  {
+    "title": "date",
+    "icon": Icons.date_range,
+  }
+];
 
-//Segundo registro
-      [
-        IndexedItem(title: 'Uber', subtitle: 'Descripcion', icon: Icons.description),
-        IndexedItem(title: '69.89', subtitle: 'Cantidad', icon: Icons.monetization_on_rounded),
-        IndexedItem(title: '2023-11-23', subtitle: 'Fecha', icon: Icons.date_range),
-        IndexedItem(title: 'Transporte', subtitle: 'Categoria', icon: Icons.bus_alert),
-      ],
-
-//Tercer registro
-      [
-        IndexedItem(title: 'Electricidad', subtitle: 'Descripcion', icon: Icons.description),
-        IndexedItem(title: '546.24', subtitle: 'Cantidad', icon: Icons.monetization_on_rounded),
-        IndexedItem(title: '2023-11-08', subtitle: 'Fecha', icon: Icons.date_range),
-        IndexedItem(title: 'Vivienda', subtitle: 'Categoria', icon: Icons.house),
-      ],
-  ];
 
 final 
 class IncomesScreen extends StatefulWidget {
@@ -83,54 +77,78 @@ class _IncomesScreenState extends State<IncomesScreen> {
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: Center(
-                child: CustomList(
-                  length: IndexedContainerIncome.length,
-                  height: 50,
-                  width: 500,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5), // Espacio entre los botones
-                      child: ElevatedButton(
-                        onPressed: (){
-                          setState(
-                            () {
-                              selectedIndex = index;
-                            }
+                child: FutureBuilder(
+                future: getIncomes(context.watch<GmailProvider>().gmail),
+                builder: (context, snapshot) {
+                  return CustomList(
+                      length: snapshot.data?.length,
+                      height: 50,
+                      width: 500,
+                      itemBuilder: (context, index) {
+                        if (snapshot.hasData) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 5), // Espacio entre los botones
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    print(index);
+                                    selectedIndex = index;
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.teal),
+                                child: Icon(Icons.file_copy)),
                           );
-                        },
-                        child: Icon(Icons.file_copy)
-                      ),
-                    );
-                  },
-                  axis: Axis.horizontal
-                ),
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                      axis: Axis.horizontal);
+                },
+              ),
               ),
             ),
           ),
 
+          //Generar de forma dinamica los elementos
           FadeInUp(
             duration: Duration(milliseconds: 800),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: IndexedStack(
-                index: selectedIndex,
-                children: [
-                  for (int i = 0; i < IndexedContainerIncome.length; i++)
-                    CustomList(
-                      length: IndexedContainerIncome[i].length,
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      width: MediaQuery.of(context).size.width,
-                      itemBuilder: (context, index) {
-                        return RegisterItem(
-                          title: IndexedContainerIncome[i][index].title,
-                          icon: IndexedContainerIncome[i][index].icon,
-                          subtitle: IndexedContainerIncome[i][index].subtitle,
-                        );
-                      },
-                      axis: Axis.vertical
-                    )
-                  ],
-              ),
+              child: FutureBuilder(
+                future: getIncomes(context.watch<GmailProvider>().gmail),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return IndexedStack(
+                      index: selectedIndex,
+                      children: [
+                        if (snapshot.hasData && snapshot.data != null)
+                          for (int i = 0; i < snapshot.data!.length; i++)
+                            CustomList(
+                              length: snapshot.data?[i].length-1,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width,
+                              itemBuilder: (context, index) {
+                                return RegisterItem(
+                                  title: '${snapshot.data?[i]['${indexedIncomesContainer[index]['title']}']}',
+                                  icon: indexedIncomesContainer[index]['icon'],
+                                  subtitle: indexedIncomesContainer[index]['title'],
+                                  leadingColor: Colors.teal[600]!,
+                                );
+                              },
+                              axis: Axis.vertical,
+                            ),
+                      ],
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
             ),
           ),
           

@@ -18,34 +18,54 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileEditScreenState extends State<ProfileScreen> {
+  //Estados o controladores
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
+
   late String _selectedImage;
-  final userData = {
-      "name": "",
-      "lastname": "",
-      "email": "",
-      "password": ""
-  };
 
   @override
   void initState() {
     super.initState();
     _selectedImage = widget.user.imageUrl;
-    setState(() {
-      userData["name"] = widget.user.name;
-      userData["lastname"] = widget.user.lastname;
-      userData["email"] = widget.user.email;
-      userData["password"] = widget.user.password;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final List userData = [
+      {
+        "controller": _nameController,
+        "obscureText": false,
+        "labelText": 'Usuario',
+        "prefixIcon": Icons.account_circle,
+      },
+      {
+        "controller": _lastnameController,
+        "obscureText": false,
+        "labelText": 'Apellido',
+        "prefixIcon": Icons.group,
+      },
+      {
+        "controller": _emailController,
+        "obscureText": false,
+        "labelText": 'Correo',
+        "prefixIcon": Icons.email,
+      },
+      {
+        "controller": _contrasenaController,
+        "obscureText": true,
+        "labelText": 'Contraseña',
+        "prefixIcon": Icons.lock,
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
         title: const Text('Editar Perfil'),
       ),
-
       drawer: Nav(),
       body: SingleChildScrollView(
         child: Padding(
@@ -96,58 +116,26 @@ class _UserProfileEditScreenState extends State<ProfileScreen> {
               const SizedBox(height: 16),
               FadeInUp(
                 duration: const Duration(seconds: 1),
-                child: Column(
-                  children: [
-      
-                    //Nombre
-                    TextFormField(
-                      initialValue: userData['name'],
-                      onChanged: (value) {
-                        setState(() {
-                          userData['name'] = value;
-                        });
-                      },
-                      decoration: const InputDecoration(labelText: 'Nombre', prefixIcon: Icon(Icons.person)),
-                    ),
-      
-                    SizedBox(height: 20,),
-                    //Apellido
-                    TextFormField(
-                      initialValue: userData['lastname'],
-                      onChanged: (value) {
-                        setState(() {
-                          userData['lastname'] = value;
-                        });
-                      },
-                      decoration: const InputDecoration(labelText: 'Apellido', prefixIcon: Icon(Icons.group)),
-                    ),
-      
-                    SizedBox(height: 20,),
-                    //Apellido
-                    TextFormField(
-                      initialValue: userData['email'],
-                      onChanged: (value) {
-                        setState(() {
-                          userData['email'] = value;
-                        });
-                      },
-                      decoration: const InputDecoration(labelText: 'Correo', prefixIcon: Icon(Icons.email)),
-                    ),
-      
-                    SizedBox(height: 20,),
-                    //Apellido
-                    TextFormField(
-                      initialValue: userData['password'],
-                      obscureText: true,
-                      onChanged: (value) {
-                        setState(() {
-                          userData['password'] = value;
-                        });
-                      },
-                      decoration: const InputDecoration(labelText: 'Contraseña', prefixIcon: Icon(Icons.lock), suffixIcon: Icon(Icons.visibility)),
-                    ),
-      
-                  ],
+                child: Builder(
+                  builder: (context) {
+                    return CustomList(
+                      height: 300,
+                        length: userData.length,
+                        width: MediaQuery.of(context).size.width,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              const SizedBox(height: 15,),
+                              CustomTextFormField(
+                                  controller: userData[index]['controller'],
+                                  obscureText: userData[index]['obscureText'],
+                                  labelText: userData[index]['labelText'],
+                                  preIcon: userData[index]['prefixIcon']),
+                            ],
+                          );
+                        },
+                        axis: Axis.vertical);
+                  }
                 ),
               ),
               const SizedBox(height: 16),
@@ -158,12 +146,12 @@ class _UserProfileEditScreenState extends State<ProfileScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       QuickAlert.show(
-                        context: context,
-                        type: QuickAlertType.success,
-                        title: 'Datos actualizados',
-                        text: 'Todos tus datos fueron actualizados con exito ${userData['name']}',
-                        confirmBtnColor: Colors.teal
-                      );
+                          context: context,
+                          type: QuickAlertType.success,
+                          title: 'Datos actualizados',
+                          text:
+                              'Todos tus datos fueron actualizados con exito ${userData[0]['controller']}',
+                          confirmBtnColor: Colors.teal);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,

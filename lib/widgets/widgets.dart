@@ -5,3 +5,5 @@ export 'nav_widget.dart';
 export 'header_dashboard.dart';
 export 'card_widget.dart';
 export 'custom_stepper.dart';
+export 'pie_chart_widget.dart';
+export 'custom_textformfield.dart';

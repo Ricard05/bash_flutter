@@ -1,39 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bash/widgets/widgets.dart';
 import 'package:draggable_home/draggable_home.dart';
-import 'package:flutter_bash/models/indexed_item.dart';
-import 'package:flutter_bash/widgets/pie_chart_widget.dart';
+import 'package:flutter_bash/providers/provider.dart';
+import 'package:flutter_bash/services/firebase_service.dart';
 
- List<List<IndexedItem>> indexedContainer = [
-  //Primer registro
-      [
-        //Campos de cada registro
-          IndexedItem(title: 'Hamburguesa', subtitle: 'Descripcion', icon: Icons.description),
-          IndexedItem(title: '123.00', subtitle: 'Cantidad', icon: Icons.monetization_on_rounded),
-          IndexedItem(title: '2023-11-08', subtitle: 'Fecha', icon: Icons.date_range),
-          IndexedItem(title: 'Comida', subtitle: 'Categoria', icon: Icons.fastfood),
-      ],
+List indexedContainer = [
+  {
+    "title": "description",
+    "icon": Icons.description,
+  },
+  {
+    "title": "amount",
+    "icon": Icons.monetization_on,
+  },
+  {
+    "title": "category",
+    "icon": Icons.book,
+  },
+  {
+    "title": "date",
+    "icon": Icons.date_range,
+  }
+];
 
-//Segundo registro
-      [
-        IndexedItem(title: 'Uber', subtitle: 'Descripcion', icon: Icons.description),
-        IndexedItem(title: '69.89', subtitle: 'Cantidad', icon: Icons.monetization_on_rounded),
-        IndexedItem(title: '2023-11-23', subtitle: 'Fecha', icon: Icons.date_range),
-        IndexedItem(title: 'Transporte', subtitle: 'Categoria', icon: Icons.bus_alert),
-      ],
-
-//Tercer registro
-      [
-        IndexedItem(title: 'Electricidad', subtitle: 'Descripcion', icon: Icons.description),
-        IndexedItem(title: '546.24', subtitle: 'Cantidad', icon: Icons.monetization_on_rounded),
-        IndexedItem(title: '2023-11-08', subtitle: 'Fecha', icon: Icons.date_range),
-        IndexedItem(title: 'Vivienda', subtitle: 'Categoria', icon: Icons.house),
-      ],
-  ];
-
-final 
-class BillsScreen extends StatefulWidget {
+final class BillsScreen extends StatefulWidget {
   const BillsScreen({Key? key}) : super(key: key);
 
   @override
@@ -47,7 +39,7 @@ class _BillsScreenState extends State<BillsScreen> {
     return DraggableHome(
       title: const Text('Gastos'),
       drawer: const Nav(),
-      appBarColor: Colors.red, 
+      appBarColor: Colors.red,
       headerWidget: FadeInUp(
         duration: Duration(milliseconds: 800),
         child: Container(
@@ -58,19 +50,30 @@ class _BillsScreenState extends State<BillsScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
                 Row(
                   children: [
-                    Text('Gastos', style: TextStyle(fontSize: 50, color: Colors.white)),
+                    Text('Gastos',
+                        style: TextStyle(fontSize: 50, color: Colors.white)),
                   ],
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 ListTile(
-                  title: Text('\$3,345.00', style: TextStyle(color: Colors.white, fontSize: 20),),
+                  title: Text(
+                    '\$3,345.00',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
                   subtitle: Text('Total de gastos'),
                 ),
                 ListTile(
-                  title: Text('Comida', style: TextStyle(color: Colors.white, fontSize: 20),),
+                  title: Text(
+                    'Comida',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
                   subtitle: Text('Categoria mas comun'),
                 ),
               ],
@@ -80,78 +83,97 @@ class _BillsScreenState extends State<BillsScreen> {
       ),
       body: [
         //Se generan botones que van a controlar el contenido que se mostrara del IndexedStack
-          FadeInUp(
-            duration: Duration(milliseconds: 800),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Center(
-                child: CustomList(
-                  length: indexedContainer.length,
-                  height: 50,
-                  width: 500,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5), // Espacio entre los botones
-                      child: ElevatedButton(
-                        onPressed: (){
-                          setState(
-                            () {
-                              selectedIndex = index;
-                            }
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red
-                        ),
-                        child: Icon(Icons.file_copy)
-                      ),
-                    );
-                  },
-                  axis: Axis.horizontal
-                ),
-              ),
-            ),
-          ),
-
-          FadeInUp(
-            duration: Duration(milliseconds: 800),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IndexedStack(
-                index: selectedIndex,
-                children: [
-                  for (int i = 0; i < indexedContainer.length; i++)
-                    CustomList(
-                      length: indexedContainer[i].length,
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      width: MediaQuery.of(context).size.width,
+        FadeInUp(
+          duration: Duration(milliseconds: 800),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Center(
+              child: FutureBuilder(
+                future: getBills(context.watch<GmailProvider>().gmail),
+                builder: (context, snapshot) {
+                  return CustomList(
+                      length: snapshot.data?.length,
+                      height: 50,
+                      width: 500,
                       itemBuilder: (context, index) {
-                        return RegisterItem(
-                          title: indexedContainer[i][index].title,
-                          icon: indexedContainer[i][index].icon,
-                          subtitle: indexedContainer[i][index].subtitle,
-                          leadingColor: Colors.red[600]!,
-                        );
+                        if (snapshot.hasData) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 5), // Espacio entre los botones
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    print(index);
+                                    selectedIndex = index;
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red),
+                                child: Icon(Icons.file_copy)),
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
                       },
-                      axis: Axis.vertical
-                    )
-                  ],
+                      axis: Axis.horizontal);
+                },
               ),
             ),
           ),
-          
-          FadeInUp(
-            duration: Duration(milliseconds: 800),
-            child: const SizedBox(
+        ),
+
+        //Generar de forma dinamica los registros
+        FadeInUp(
+          duration: Duration(milliseconds: 800),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FutureBuilder(
+                future: getBills(context.watch<GmailProvider>().gmail),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return IndexedStack(
+                      index: selectedIndex,
+                      children: [
+                        if (snapshot.hasData && snapshot.data != null)
+                          for (int i = 0; i < snapshot.data!.length; i++)
+                            CustomList(
+                              length: snapshot.data?[i].length-1,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width,
+                              itemBuilder: (context, index) {
+                                return RegisterItem(
+                                  title: '${snapshot.data?[i]['${indexedContainer[index]['title']}']}',
+                                  icon: indexedContainer[index]['icon'],
+                                  subtitle: indexedContainer[index]['title'],
+                                  leadingColor: Colors.red[600]!,
+                                );
+                              },
+                              axis: Axis.vertical,
+                            ),
+                      ],
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
+          ),
+        ),
+
+        FadeInUp(
+          duration: Duration(milliseconds: 800),
+          child: const SizedBox(
               height: 300,
               width: 500,
               child: Padding(
                 padding: EdgeInsets.all(40),
                 child: MyPieChart(),
-              )
-                  ),
-          ),
-      ]
+              )),
+        ),
+      ],
     );
   }
 }
